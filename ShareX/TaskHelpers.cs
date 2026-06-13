@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -25,7 +25,6 @@
 
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
-using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEffectsLib;
 using ShareX.IndexerLib;
 using ShareX.MediaLib;
@@ -33,8 +32,6 @@ using ShareX.Properties;
 using ShareX.ScreenCaptureLib;
 using ShareX.UploadersLib;
 using ShareX.UploadersLib.SharingServices;
-using SkiaSharp;
-using SkiaSharp.Views.Desktop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1151,44 +1148,16 @@ namespace ShareX
             clipboardViewerForm.Show();
         }
 
-        private static void ShowImageEditorSelector(TaskSettings taskSettings)
-        {
-            if (taskSettings.ToolsSettings.ShowImageEditorSelector)
-            {
-                using (ImageEditorSelectorForm selectorForm = new ImageEditorSelectorForm())
-                {
-                    if (selectorForm.ShowDialog() == DialogResult.OK)
-                    {
-                        taskSettings.ToolsSettingsReference.UseLegacyImageEditor = selectorForm.UseLegacyImageEditor;
-                        taskSettings.ToolsSettingsReference.ShowImageEditorSelector = false;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-
         public static void OpenImageEditor(TaskSettings taskSettings = null)
         {
             if (taskSettings == null) taskSettings = TaskSettings.GetDefaultTaskSettings();
 
-            ShowImageEditorSelector(taskSettings);
-
-            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
+            using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
             {
-                using (EditorStartupForm editorStartupForm = new EditorStartupForm(taskSettings.CaptureSettingsReference.SurfaceOptions))
+                if (editorStartupForm.ShowDialog() == DialogResult.OK)
                 {
-                    if (editorStartupForm.ShowDialog() == DialogResult.OK)
-                    {
-                        AnnotateImageAsync(editorStartupForm.Image, editorStartupForm.ImageFilePath, taskSettings);
-                    }
+                    AnnotateImageAsync(editorStartupForm.Image, editorStartupForm.ImageFilePath, taskSettings);
                 }
-            }
-            else
-            {
-                AnnotateImageAsync(null, null, taskSettings);
             }
         }
 
@@ -1230,14 +1199,7 @@ namespace ShareX
 
         public static Bitmap AnnotateImage(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
         {
-            ShowImageEditorSelector(taskSettings);
-
-            if (taskSettings.ToolsSettingsReference.UseLegacyImageEditor)
-            {
-                return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
-            }
-
-            return AnnotateImageModern(bmp, filePath, taskSettings, taskMode);
+            return AnnotateImageLegacy(bmp, filePath, taskSettings, taskMode);
         }
 
         private static Bitmap AnnotateImageLegacy(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
@@ -1313,163 +1275,7 @@ namespace ShareX
             return null;
         }
 
-        private static Bitmap AnnotateImageModern(Bitmap bmp, string filePath, TaskSettings taskSettings, bool taskMode = false)
-        {
-            Bitmap bmpResult = null;
-
-            EditorEvents events = new EditorEvents
-            {
-                CopyImageRequested = (skBitmap) =>
-                {
-                    using Bitmap img = skBitmap.ToBitmap();
-                    MainFormCopyImage(img);
-                },
-                SaveImageRequested = (skBitmap, newFilePath) =>
-                {
-                    using Bitmap img = skBitmap.ToBitmap();
-
-                    if (string.IsNullOrEmpty(newFilePath))
-                    {
-                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                        newFilePath = Path.Combine(screenshotsFolder, fileName);
-                    }
-
-                    ImageHelpers.SaveImage(img, newFilePath);
-                    return newFilePath;
-                },
-                SaveImageAsRequested = (skBitmap, newFilePath) =>
-                {
-                    using Bitmap img = skBitmap.ToBitmap();
-
-                    if (string.IsNullOrEmpty(newFilePath))
-                    {
-                        string screenshotsFolder = GetScreenshotsFolder(taskSettings);
-                        string fileName = GetFileName(taskSettings, taskSettings.ImageSettings.ImageFormat.GetDescription(), img);
-                        newFilePath = Path.Combine(screenshotsFolder, fileName);
-                    }
-
-                    newFilePath = ImageHelpers.SaveImageFileDialog(img, newFilePath);
-                    return newFilePath;
-                },
-                PrintImageRequested = (skBitmap) =>
-                {
-                    Bitmap bmp = skBitmap.ToBitmap();
-                    MainFormPrintImage(bmp);
-                },
-                PinImageRequested = (skBitmap) =>
-                {
-                    Bitmap bmp = skBitmap.ToBitmap();
-                    PinToScreen(bmp, taskSettings);
-                },
-                UploadImageRequested = (skBitmap) =>
-                {
-                    Bitmap bmp = skBitmap.ToBitmap();
-                    MainFormUploadImage(bmp, taskSettings);
-                }
-            };
-
-            SKBitmap skBitmapResult = null;
-
-            if (bmp != null)
-            {
-                using SKBitmap skBitmap = GdiBitmapToSkBitmap(bmp);
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(skBitmap, taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                    events, taskMode, filePath);
-            }
-            else
-            {
-                skBitmapResult = AvaloniaIntegration.ShowEditorDialog(taskSettings.ToolsSettingsReference.ImageEditorOptions,
-                    events, taskMode, filePath);
-            }
-
-            if (skBitmapResult != null)
-            {
-                using (skBitmapResult)
-                {
-                    bmpResult = skBitmapResult.ToBitmap();
-                }
-            }
-
-            return bmpResult;
-        }
-
-        // Avoid the slow PNG re-encode path for large captures while still bypassing
-        // the WindowsForms Bitmap->SKBitmap conversion that regressed post-effects opens.
-        private static SKBitmap GdiBitmapToSkBitmap(Bitmap bitmap)
-        {
-            Bitmap sourceBitmap = bitmap;
-            bool disposeSourceBitmap = false;
-            PixelFormat pixelFormat = bitmap.PixelFormat;
-
-            if (pixelFormat != PixelFormat.Format32bppArgb && pixelFormat != PixelFormat.Format32bppPArgb)
-            {
-                sourceBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppPArgb);
-                sourceBitmap.SetResolution(bitmap.HorizontalResolution, bitmap.VerticalResolution);
-
-                using (Graphics graphics = Graphics.FromImage(sourceBitmap))
-                {
-                    graphics.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
-                    graphics.DrawImage(bitmap, 0, 0, bitmap.Width, bitmap.Height);
-                }
-
-                disposeSourceBitmap = true;
-                pixelFormat = sourceBitmap.PixelFormat;
-            }
-
-            Rectangle rect = new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
-            BitmapData bmpData = sourceBitmap.LockBits(rect, ImageLockMode.ReadOnly, pixelFormat);
-
-            try
-            {
-                SKAlphaType alphaType = pixelFormat == PixelFormat.Format32bppPArgb ? SKAlphaType.Premul : SKAlphaType.Unpremul;
-                SKBitmap skBitmap = new SKBitmap(new SKImageInfo(sourceBitmap.Width, sourceBitmap.Height, SKColorType.Bgra8888, alphaType));
-
-                IntPtr dstPtr = skBitmap.GetPixels();
-                int dstStride = skBitmap.RowBytes;
-                int srcStride = bmpData.Stride;
-                int srcStrideAbs = Math.Abs(srcStride);
-                int height = sourceBitmap.Height;
-                int rowBytes = sourceBitmap.Width * 4;
-                IntPtr srcStart = bmpData.Scan0;
-
-                if (srcStride < 0)
-                {
-                    srcStart = IntPtr.Add(srcStart, srcStride * (height - 1));
-                }
-
-                if (srcStrideAbs == dstStride)
-                {
-                    int copyLength = dstStride * height;
-                    byte[] pixels = new byte[copyLength];
-                    Marshal.Copy(srcStart, pixels, 0, copyLength);
-                    Marshal.Copy(pixels, 0, dstPtr, copyLength);
-                }
-                else
-                {
-                    byte[] row = new byte[rowBytes];
-
-                    for (int y = 0; y < height; y++)
-                    {
-                        IntPtr srcRow = IntPtr.Add(srcStart, y * srcStrideAbs);
-                        IntPtr dstRow = IntPtr.Add(dstPtr, y * dstStride);
-                        Marshal.Copy(srcRow, row, 0, rowBytes);
-                        Marshal.Copy(row, 0, dstRow, rowBytes);
-                    }
-                }
-
-                return skBitmap;
-            }
-            finally
-            {
-                sourceBitmap.UnlockBits(bmpData);
-
-                if (disposeSourceBitmap)
-                {
-                    sourceBitmap.Dispose();
-                }
-            }
-        }
+        // Modern image editor removed to reduce app size
 
         public static void MainFormCopyImage(Bitmap bmp)
         {

@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -70,7 +70,12 @@ namespace ShareX
 
         private void AddEnumItemsContextMenu(Action<HotkeyType> selectedEnum, params ToolStripDropDown[] parents)
         {
-            EnumInfo[] enums = Helpers.GetEnums<HotkeyType>().OfType<Enum>().Select(x => new EnumInfo(x)).ToArray();
+            IEnumerable<EnumInfo> enumsList = Helpers.GetEnums<HotkeyType>().OfType<Enum>().Select(x => new EnumInfo(x));
+            if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
+            {
+                enumsList = enumsList.Where(x => !(x.Value is HotkeyType hotkeyType && hotkeyType >= HotkeyType.FileUpload && hotkeyType <= HotkeyType.StopUploads));
+            }
+            EnumInfo[] enums = enumsList.ToArray();
 
             foreach (ToolStripDropDown parent in parents)
             {

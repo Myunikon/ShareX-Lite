@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -23,10 +23,8 @@
 
 #endregion License Information (GPL v3)
 
-using Avalonia.Win32.Interoperability;
 using ShareX.HelpersLib;
 using ShareX.HistoryLib;
-using ShareX.ImageEditor.Hosting;
 using ShareX.Properties;
 using ShareX.UploadersLib;
 using System;
@@ -322,7 +320,6 @@ namespace ShareX
         private static void Run()
         {
             ApplicationConfiguration.Initialize();
-            Application.AddMessageFilter(new WinFormsAvaloniaMessageFilter());
 
             DebugHelper.WriteLine("ShareX starting.");
             DebugHelper.WriteLine("Version: " + VersionText);
@@ -358,13 +355,6 @@ namespace ShareX
             UpdateManager = new ShareXUpdateManager();
             LanguageHelper.ChangeLanguage(Settings.Language);
             CleanupManager.CleanupAsync();
-
-            if (!DefaultTaskSettings.ToolsSettings.UseLegacyImageEditor)
-            {
-                DebugHelper.WriteLine("Avalonia init started.");
-                AvaloniaIntegration.Initialize();
-                DebugHelper.WriteLine("Avalonia init finished.");
-            }
 
             DebugHelper.WriteLine("MainForm init started.");
             MainForm = new MainForm();

@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -25,7 +25,6 @@
 
 using Newtonsoft.Json;
 using ShareX.HelpersLib;
-using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEffectsLib;
 using ShareX.IndexerLib;
 using ShareX.MediaLib;
@@ -57,7 +56,7 @@ namespace ShareX
         public AfterCaptureTasks AfterCaptureJob = AfterCaptureTasks.CopyImageToClipboard | AfterCaptureTasks.SaveImageToFile;
 
         public bool UseDefaultAfterUploadJob = true;
-        public AfterUploadTasks AfterUploadJob = AfterUploadTasks.CopyURLToClipboard;
+        public AfterUploadTasks AfterUploadJob = AfterUploadTasks.None;
 
         public bool UseDefaultDestinations = true;
         public ImageDestination ImageDestination = ImageDestination.Imgur;
@@ -315,9 +314,9 @@ namespace ShareX
         public float ToastWindowFadeDuration = 1f;
         public ContentAlignment ToastWindowPlacement = ContentAlignment.BottomRight;
         public Size ToastWindowSize = new Size(400, 300);
-        public ToastClickAction ToastWindowLeftClickAction = ToastClickAction.OpenUrl;
+        public ToastClickAction ToastWindowLeftClickAction = ToastClickAction.OpenFile;
         public ToastClickAction ToastWindowRightClickAction = ToastClickAction.CloseNotification;
-        public ToastClickAction ToastWindowMiddleClickAction = ToastClickAction.AnnotateImage;
+        public ToastClickAction ToastWindowMiddleClickAction = ToastClickAction.CopyImageToClipboard;
         public bool ToastWindowAutoHide = true;
         public bool DisableNotificationsOnFullscreen = false;
         public bool UseCustomCaptureSound = false;
@@ -465,9 +464,8 @@ namespace ShareX
         public VideoThumbnailOptions VideoThumbnailOptions = new VideoThumbnailOptions();
         public BorderlessWindowSettings BorderlessWindowSettings = new BorderlessWindowSettings();
         public AIOptions AIOptions = new AIOptions();
-        public ImageEditorOptions ImageEditorOptions = new ImageEditorOptions();
-        public bool UseLegacyImageEditor = false;
-        public bool ShowImageEditorSelector = true;
+        public bool UseLegacyImageEditor = true;
+        public bool ShowImageEditorSelector = false;
     }
 
     public class TaskSettingsAdvanced

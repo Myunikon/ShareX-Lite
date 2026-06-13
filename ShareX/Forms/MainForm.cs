@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -96,7 +96,7 @@ namespace ShareX
 
             AfterCaptureTasks[] ignoreAfterCaptureTasks = null;
 
-            if (SystemOptions.DisableUpload)
+            if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
             {
                 ignoreAfterCaptureTasks = new AfterCaptureTasks[] { AfterCaptureTasks.ShowBeforeUploadWindow, AfterCaptureTasks.UploadImageToHost };
             }
@@ -202,7 +202,7 @@ namespace ShareX
 
             ExportImportControl.UploadRequested += json => UploadManager.UploadText(json);
 
-            if (SystemOptions.DisableUpload)
+            if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
             {
                 tsddbUpload.Visible = false;
                 tsddbAfterUploadTasks.Visible = false;
@@ -749,7 +749,7 @@ namespace ShareX
                         }
                     }
 
-                    tsmiUploadSelectedFile.Visible = !SystemOptions.DisableUpload && uim.SelectedItem.IsFileExist;
+                    tsmiUploadSelectedFile.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsFileExist;
                     tsmiDownloadSelectedURL.Visible = uim.SelectedItem.IsFileURL;
                     tsmiEditSelectedFile.Visible = uim.SelectedItem.IsImageFile;
                     tsmiBeautifyImage.Visible = uim.SelectedItem.IsImageFile;
@@ -758,8 +758,8 @@ namespace ShareX
                     UpdateActionsMenu(uim.SelectedItem.Info.FilePath);
                     tsmiDeleteSelectedItem.Visible = true;
                     tsmiDeleteSelectedFile.Visible = uim.SelectedItem.IsFileExist;
-                    tsmiShortenSelectedURL.Visible = !SystemOptions.DisableUpload && uim.SelectedItem.IsURLExist;
-                    tsmiShareSelectedURL.Visible = !SystemOptions.DisableUpload && uim.SelectedItem.IsURLExist;
+                    tsmiShortenSelectedURL.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsURLExist;
+                    tsmiShareSelectedURL.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsURLExist;
                     tsmiAnalyzeImage.Visible = uim.SelectedItem.IsImageFile;
                     tsmiGoogleLens.Visible = uim.SelectedItem.IsURLExist;
                     tsmiBingVisualSearch.Visible = uim.SelectedItem.IsURLExist;

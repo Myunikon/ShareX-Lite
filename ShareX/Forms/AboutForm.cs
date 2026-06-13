@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -109,8 +109,7 @@ McoreD: {Links.McoreD}
 ", FontStyle.Regular);
 
             rtbInfo.AppendLine(Resources.AboutForm_AboutForm_Credits, FontStyle.Bold, 13);
-            rtbInfo.AppendLine(@"Avalonia UI: https://avaloniaui.net
-Json.NET: https://github.com/JamesNK/Newtonsoft.Json
+            rtbInfo.AppendLine(@"Json.NET: https://github.com/JamesNK/Newtonsoft.Json
 SSH.NET: https://github.com/sshnet/SSH.NET
 Lucide Icons: https://lucide.dev
 Fugue Icons: http://p.yusukekamiyamane.com

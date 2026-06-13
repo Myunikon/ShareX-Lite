@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -63,14 +63,14 @@ namespace ShareX
         public bool TrayIconProgressEnabled = true;
         public bool TaskbarProgressEnabled = true;
         public bool UseWhiteShareXIcon = false;
-        public bool RememberMainFormPosition = false;
+        public bool RememberMainFormPosition = true;
         public Point MainFormPosition = Point.Empty;
-        public bool RememberMainFormSize = false;
+        public bool RememberMainFormSize = true;
         public Size MainFormSize = Size.Empty;
 
         public HotkeyType TrayLeftClickAction = HotkeyType.RectangleRegion;
         public HotkeyType TrayLeftDoubleClickAction = HotkeyType.OpenMainWindow;
-        public HotkeyType TrayMiddleClickAction = HotkeyType.ClipboardUploadWithContentViewer;
+        public HotkeyType TrayMiddleClickAction = HotkeyType.ScreenRecorder;
 
         public bool AutoCheckUpdate = true;
         public UpdateChannel UpdateChannel = UpdateChannel.Release;
@@ -148,7 +148,7 @@ namespace ShareX
         public bool HistoryCheckURL = false;
 
         public RecentTask[] RecentTasks = null;
-        public bool RecentTasksSave = false;
+        public bool RecentTasksSave = true;
         public int RecentTasksMaxCount = 10;
         public bool RecentTasksShowInMainWindow = true;
         public bool RecentTasksShowInTrayMenu = true;
@@ -187,7 +187,7 @@ namespace ShareX
         [Editor(typeof(ExeFileNameEditor), typeof(UITypeEditor))]
         public string BrowserPath { get; set; }
 
-        [Category("Application"), DefaultValue(false), Description("Save settings after task completed but only if there are no other active tasks.")]
+        [Category("Application"), DefaultValue(true), Description("Save settings after task completed but only if there are no other active tasks.")]
         public bool SaveSettingsAfterTaskCompleted { get; set; }
 
         [Category("Application"), DefaultValue(false), Description("In main window when task is completed automatically select it.")]
@@ -235,7 +235,7 @@ namespace ShareX
         [Category("Image"), DefaultValue(false), Description("Strip color space information chunks from PNG image.")]
         public bool PNGStripColorSpaceInformation { get; set; }
 
-        [Category("Upload"), DefaultValue(false), Description("Can be used to disable uploading application wide.")]
+        [Category("Upload"), DefaultValue(true), Description("Can be used to disable uploading application wide.")]
         public bool DisableUpload { get; set; }
 
         [Category("Upload"), DefaultValue(true), Description("Ignore emojis while URL encoding upload results.")]
@@ -299,7 +299,7 @@ namespace ShareX
         #region Actions toolbar
 
         public List<HotkeyType> ActionsToolbarList = new List<HotkeyType>() { HotkeyType.RectangleRegion, HotkeyType.PrintScreen, HotkeyType.ScreenRecorder,
-            HotkeyType.None, HotkeyType.FileUpload, HotkeyType.ClipboardUploadWithContentViewer };
+            HotkeyType.ScreenRecorderGIF, HotkeyType.None, HotkeyType.OCR, HotkeyType.ColorPicker };
 
         public bool ActionsToolbarRunAtStartup = false;
 

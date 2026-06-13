@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -54,6 +54,21 @@ namespace ShareX
             IsDefault = isDefault;
 
             UpdateWindowTitle();
+
+            if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
+            {
+                tcTaskSettings.TabPages.Remove(tpUpload);
+                cbOverrideUploadSettings.Visible = false;
+
+                cbOverrideAfterUploadSettings.Visible = false;
+                btnAfterUpload.Visible = false;
+                cbOverrideDestinationSettings.Visible = false;
+                btnDestinations.Visible = false;
+                cbOverrideCustomUploader.Visible = false;
+                cbCustomUploaders.Visible = false;
+                cbOverrideFTPAccount.Visible = false;
+                cbFTPAccounts.Visible = false;
+            }
 
             if (IsDefault)
             {
@@ -563,7 +578,12 @@ namespace ShareX
 
         private void AddEnumItemsContextMenu<T>(Action<T> selectedEnum, params ToolStripDropDown[] parents) where T : Enum
         {
-            EnumInfo[] enums = Helpers.GetEnums<T>().OfType<Enum>().Select(x => new EnumInfo(x)).ToArray();
+            IEnumerable<EnumInfo> enumsList = Helpers.GetEnums<T>().OfType<Enum>().Select(x => new EnumInfo(x));
+            if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
+            {
+                enumsList = enumsList.Where(x => !(x.Value is HotkeyType hotkeyType && hotkeyType >= HotkeyType.FileUpload && hotkeyType <= HotkeyType.StopUploads));
+            }
+            EnumInfo[] enums = enumsList.ToArray();
 
             foreach (ToolStripDropDown parent in parents)
             {
