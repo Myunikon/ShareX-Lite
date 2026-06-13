@@ -204,6 +204,7 @@ jobs:
         with:
           name: Setup-x64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Setup-ARM64)
         if: github.ref == 'refs/heads/develop'
@@ -211,12 +212,14 @@ jobs:
         with:
           name: Setup-ARM64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Portable-x64)
         uses: actions/download-artifact@v8
         with:
           name: Portable-x64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Portable-ARM64)
         if: github.ref == 'refs/heads/develop'
@@ -224,6 +227,7 @@ jobs:
         with:
           name: Portable-ARM64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Debug-x64)
         if: github.ref == 'refs/heads/develop'
@@ -231,6 +235,7 @@ jobs:
         with:
           name: Debug-x64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Debug-ARM64)
         if: github.ref == 'refs/heads/develop'
@@ -238,6 +243,7 @@ jobs:
         with:
           name: Debug-ARM64
           path: Output
+        continue-on-error: true
 
       - name: Download artifact (Steam-x64)
         if: github.ref == 'refs/heads/develop'
@@ -245,41 +251,7 @@ jobs:
         with:
           name: Steam-x64
           path: Output
-
-      # - name: Download artifact (Steam-ARM64)
-      #   if: github.ref == 'refs/heads/develop'
-      #   uses: actions/download-artifact@v8
-      #   with:
-      #     name: Steam-ARM64
-      #     path: Output
-
-      - name: Download artifact (MicrosoftStore-x64)
-        if: github.ref == 'refs/heads/develop'
-        uses: actions/download-artifact@v8
-        with:
-          name: MicrosoftStore-x64
-          path: Output
-
-      - name: Download artifact (MicrosoftStore-ARM64)
-        if: github.ref == 'refs/heads/develop'
-        uses: actions/download-artifact@v8
-        with:
-          name: MicrosoftStore-ARM64
-          path: Output
-
-      - name: Download artifact (MicrosoftStoreDebug-x64)
-        if: github.ref == 'refs/heads/develop'
-        uses: actions/download-artifact@v8
-        with:
-          name: MicrosoftStoreDebug-x64
-          path: Output
-
-      - name: Download artifact (MicrosoftStoreDebug-ARM64)
-        if: github.ref == 'refs/heads/develop'
-        uses: actions/download-artifact@v8
-        with:
-          name: MicrosoftStoreDebug-ARM64
-          path: Output
+        continue-on-error: true
 
       - name: Create release body file
         run: |
@@ -308,19 +280,13 @@ jobs:
           body_path: ${{ env.RELEASE_BODY_PATH }}
           draft: false
           prerelease: false
+          fail_on_unmatched_files: false
           files: |
             Output/ShareX-${{ env.APP_VERSION }}-setup-x64.exe
-            # Output/ShareX-${{ env.APP_VERSION }}-setup-arm64.exe
             Output/ShareX-${{ env.APP_VERSION }}-portable-x64.zip
-            # Output/ShareX-${{ env.APP_VERSION }}-portable-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-debug-x64.zip
             Output/ShareX-${{ env.APP_VERSION }}-debug-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-Steam-x64.zip
-            # Output/ShareX-${{ env.APP_VERSION }}-Steam-arm64.zip
-            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-x64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-arm64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-x64.appx
-            Output/ShareX-${{ env.APP_VERSION }}-MicrosoftStore-debug-arm64.appx
 
       - name: Release (Stable)
         env:
@@ -335,8 +301,7 @@ jobs:
           body_path: ${{ env.RELEASE_BODY_PATH }}
           draft: true
           prerelease: true
+          fail_on_unmatched_files: false
           files: |
             Output/ShareX-${{ env.APP_VERSION }}-setup-x64.exe
-            # Output/ShareX-${{ env.APP_VERSION }}-setup-arm64.exe
             Output/ShareX-${{ env.APP_VERSION }}-portable-x64.zip
-            # Output/ShareX-${{ env.APP_VERSION }}-portable-arm64.zip
