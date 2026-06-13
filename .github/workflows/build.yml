@@ -26,8 +26,6 @@ jobs:
           - Release
           - Debug
           - Steam
-          - MicrosoftStore
-          - MicrosoftStoreDebug
         platform:
           - x64
           - ARM64
