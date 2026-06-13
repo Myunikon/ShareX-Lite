@@ -95,6 +95,10 @@ jobs:
           # Build ShareX.Setup and its dependencies for x64 since it can't run as ARM64 on CI
           dotnet build --configuration "${{ matrix.configuration }}" -p:Platform="x64" --self-contained true "ShareX.Setup\ShareX.Setup.csproj"
 
+      - name: Install Inno Setup
+        if: matrix.configuration == 'Release'
+        run: choco install innosetup -y
+
       - name: Setup
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
