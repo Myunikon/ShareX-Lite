@@ -37,7 +37,6 @@
     <Optimize>true</Optimize>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>partial</TrimMode>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 </Project>
