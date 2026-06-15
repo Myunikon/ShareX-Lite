@@ -228,6 +228,9 @@ namespace ShareX
                 tsbDonate.Visible = false;
                 tsbX.Visible = false;
                 tsbDiscord.Visible = false;
+
+                tsmiAI.Visible = false;
+                tsmiTrayAI.Visible = false;
             }
 
             // TODO: Translate
