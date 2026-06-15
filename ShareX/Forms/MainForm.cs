@@ -224,6 +224,10 @@ namespace ShareX
                 tsmiUploadSelectedFile.Visible = false;
                 tsmiShortenSelectedURL.Visible = false;
                 tsmiShareSelectedURL.Visible = false;
+
+                tsbDonate.Visible = false;
+                tsbX.Visible = false;
+                tsbDiscord.Visible = false;
             }
 
             // TODO: Translate

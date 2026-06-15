@@ -236,7 +236,7 @@ namespace ShareX
         public bool PNGStripColorSpaceInformation { get; set; }
 
         [Category("Upload"), DefaultValue(true), Description("Can be used to disable uploading application wide.")]
-        public bool DisableUpload { get; set; }
+        public bool DisableUpload { get => true; set { } }
 
         [Category("Upload"), DefaultValue(true), Description("Ignore emojis while URL encoding upload results.")]
         public bool URLEncodeIgnoreEmoji { get; set; }
