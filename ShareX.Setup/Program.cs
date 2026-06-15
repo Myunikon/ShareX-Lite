@@ -88,7 +88,7 @@ namespace ShareX.Setup
         private static string ExifToolPath => Path.Combine(OutputDir, "exiftool.exe");
         private static string MakeAppxPath => Path.Combine(WindowsKitsDir, "x64", "makeappx.exe");
 
-        private const string InnoSetupCompilerPath = @"C:\Program Files (x86)\Inno Setup 6\ISCC.exe";
+        private static string InnoSetupCompilerPath => GetInnoSetupCompilerPath();
         private const string FFmpegVersion = "8.1";
         private static string FFmpegDownloadURL => $"https://github.com/ShareX/FFmpeg/releases/download/v{FFmpegVersion}/ffmpeg-{FFmpegVersion}-win-{Platform}.zip";
         private const string RecorderDevicesVersion = "0.12.10";
@@ -271,9 +271,70 @@ namespace ShareX.Setup
             CreateChecksumFile(SetupPath);
         }
 
+        private static string GetInnoSetupCompilerPath()
+        {
+            // 1. Try common registry locations
+            string[] registryKeys = new string[]
+            {
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1",
+                @"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Inno Setup 6_is1"
+            };
+
+            foreach (string keyName in registryKeys)
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName))
+                {
+                    if (key != null)
+                    {
+                        object installLocation = key.GetValue("InstallLocation");
+                        if (installLocation != null)
+                        {
+                            string path = Path.Combine(installLocation.ToString(), "ISCC.exe");
+                            if (File.Exists(path))
+                            {
+                                return path;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Try common default installation paths
+            string[] defaultPaths = new string[]
+            {
+                @"C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+                @"C:\Program Files\Inno Setup 6\ISCC.exe"
+            };
+
+            foreach (string path in defaultPaths)
+            {
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+            }
+
+            // 3. Try to find in system PATH
+            string pathEnv = Environment.GetEnvironmentVariable("PATH");
+            if (!string.IsNullOrEmpty(pathEnv))
+            {
+                foreach (string dir in pathEnv.Split(Path.PathSeparator))
+                {
+                    string fullPath = Path.Combine(dir.Trim('"', '\''), "ISCC.exe");
+                    if (File.Exists(fullPath))
+                    {
+                        return fullPath;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private static void CompileISSFile(string fileName)
         {
-            if (File.Exists(InnoSetupCompilerPath))
+            string compilerPath = InnoSetupCompilerPath;
+            if (!string.IsNullOrEmpty(compilerPath) && File.Exists(compilerPath))
             {
                 Console.WriteLine("Compiling setup file: " + fileName);
 
@@ -281,7 +342,7 @@ namespace ShareX.Setup
                 {
                     ProcessStartInfo psi = new ProcessStartInfo()
                     {
-                        FileName = InnoSetupCompilerPath,
+                        FileName = compilerPath,
                         WorkingDirectory = InnoSetupDir,
                         Arguments = $"/Q /DPlatform={Platform} \"{fileName}\"",
                         UseShellExecute = false
@@ -296,7 +357,7 @@ namespace ShareX.Setup
             }
             else
             {
-                Console.WriteLine("InnoSetup compiler is missing: " + InnoSetupCompilerPath);
+                Console.WriteLine("InnoSetup compiler is missing.");
             }
         }
 

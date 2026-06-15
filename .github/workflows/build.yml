@@ -258,7 +258,9 @@ jobs:
           fail_on_unmatched_files: false
           files: |
             Output/ShareX-${{ env.APP_VERSION }}-setup-x64.exe
+            Output/ShareX-${{ env.APP_VERSION }}-setup-arm64.exe
             Output/ShareX-${{ env.APP_VERSION }}-portable-x64.zip
+            Output/ShareX-${{ env.APP_VERSION }}-portable-arm64.zip
             Output/ShareX-${{ env.APP_VERSION }}-debug-x64.zip
             Output/ShareX-${{ env.APP_VERSION }}-debug-arm64.zip
 
@@ -276,4 +278,6 @@ jobs:
           fail_on_unmatched_files: false
           files: |
             Output/ShareX-${{ env.APP_VERSION }}-setup-x64.exe
+            Output/ShareX-${{ env.APP_VERSION }}-setup-arm64.exe
             Output/ShareX-${{ env.APP_VERSION }}-portable-x64.zip
+            Output/ShareX-${{ env.APP_VERSION }}-portable-arm64.zip
