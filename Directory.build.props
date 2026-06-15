@@ -11,6 +11,7 @@
     <Configurations>Release;Debug;Steam;MicrosoftStore;MicrosoftStoreDebug</Configurations>
     <Platforms>x64;ARM64</Platforms>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <CustomResourceTypesSupport>true</CustomResourceTypesSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Platform)' == 'x64'">
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
