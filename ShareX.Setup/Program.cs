@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -41,7 +41,6 @@ namespace ShareX.Setup
             CreateSetup = 1,
             CreatePortable = 1 << 1,
             CreateDebug = 1 << 2,
-            CreateSteamFolder = 1 << 3,
             CreateMicrosoftStoreFolder = 1 << 4,
             CreateMicrosoftStoreDebugFolder = 1 << 5,
             CompileAppx = 1 << 6,
@@ -51,7 +50,6 @@ namespace ShareX.Setup
 
             Release = CreateSetup | CreatePortable | DownloadTools | OpenOutputDirectory,
             Debug = CreateDebug | DownloadTools | OpenOutputDirectory,
-            Steam = CreateSteamFolder | DownloadTools | OpenOutputDirectory,
             MicrosoftStore = CreateMicrosoftStoreFolder | CompileAppx | DownloadTools | OpenOutputDirectory,
             MicrosoftStoreDebug = CreateMicrosoftStoreDebugFolder | CompileAppx | DownloadTools | OpenOutputDirectory
         }
@@ -68,13 +66,11 @@ namespace ShareX.Setup
         private static string RuntimeId => Platform == "arm64" ? "win-arm64" : "win-x64";
         private static string SolutionPath => Path.Combine(ParentDir, "ShareX.sln");
         private static string BinDir => Path.Combine(ParentDir, "ShareX", "bin", Configuration, RuntimeId);
-        private static string SteamLauncherDir => Path.Combine(ParentDir, "ShareX.Steam", "bin", Configuration);
         private static string ExecutablePath => Path.Combine(BinDir, "ShareX.exe");
 
         private static string OutputDir => Path.Combine(ParentDir, "Output");
         private static string PortableOutputDir => Path.Combine(OutputDir, "ShareX-portable");
         private static string DebugOutputDir => Path.Combine(OutputDir, "ShareX-debug");
-        private static string SteamOutputDir => Path.Combine(OutputDir, "ShareX-Steam");
         private static string MicrosoftStoreOutputDir => Path.Combine(OutputDir, "ShareX-MicrosoftStore");
         private static string MicrosoftStoreDebugOutputDir => Path.Combine(OutputDir, "ShareX-MicrosoftStore-debug");
 
@@ -85,8 +81,6 @@ namespace ShareX.Setup
         private static string SetupPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-setup-{Platform}.exe");
         private static string PortableZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-portable-{Platform}.zip");
         private static string DebugZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-debug-{Platform}.zip");
-        private static string SteamUpdatesDir => Path.Combine(SteamOutputDir, "Updates");
-        private static string SteamZipPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-Steam-{Platform}.zip");
         private static string MicrosoftStoreAppxPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-MicrosoftStore-{Platform}.appx");
         private static string MicrosoftStoreDebugAppxPath => Path.Combine(OutputDir, $"ShareX-{AppVersion}-MicrosoftStore-debug-{Platform}.appx");
         private static string FFmpegPath => Path.Combine(OutputDir, "ffmpeg.exe");
@@ -145,12 +139,7 @@ namespace ShareX.Setup
                 CreateZipFile(DebugOutputDir, DebugZipPath);
             }
 
-            if (Job.HasFlag(SetupJobs.CreateSteamFolder))
-            {
-                CreateSteamFolder();
 
-                CreateZipFile(SteamOutputDir, SteamZipPath);
-            }
 
             if (Job.HasFlag(SetupJobs.CreateMicrosoftStoreFolder))
             {
@@ -243,10 +232,7 @@ namespace ShareX.Setup
             {
                 Configuration = "Debug";
             }
-            else if (Job.HasFlag(SetupJobs.CreateSteamFolder))
-            {
-                Configuration = "Steam";
-            }
+
             else if (Job.HasFlag(SetupJobs.CreateMicrosoftStoreFolder))
             {
                 Configuration = "MicrosoftStore";
@@ -337,24 +323,7 @@ namespace ShareX.Setup
             CreateChecksumFile(outputPackageName);
         }
 
-        private static void CreateSteamFolder()
-        {
-            Console.WriteLine("Creating Steam folder: " + SteamOutputDir);
 
-            if (Directory.Exists(SteamOutputDir))
-            {
-                Directory.Delete(SteamOutputDir, true);
-            }
-
-            Directory.CreateDirectory(SteamOutputDir);
-
-            FileHelpers.CopyFiles(Path.Combine(SteamLauncherDir, "ShareX_Launcher.exe"), SteamOutputDir);
-            FileHelpers.CopyFiles(Path.Combine(SteamLauncherDir, "steam_appid.txt"), SteamOutputDir);
-            FileHelpers.CopyFiles(Path.Combine(SteamLauncherDir, "installscript.vdf"), SteamOutputDir);
-            FileHelpers.CopyFiles(SteamLauncherDir, SteamOutputDir, "*.dll");
-
-            CreateFolder(BinDir, SteamUpdatesDir, SetupJobs.CreateSteamFolder);
-        }
 
         private static void CreateFolder(string source, string destination, SetupJobs job)
         {

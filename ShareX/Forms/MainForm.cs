@@ -231,6 +231,69 @@ namespace ShareX
 
                 tsmiAI.Visible = false;
                 tsmiTrayAI.Visible = false;
+
+                // Hide tools that are not part of main features
+                tsmiImageBeautifier.Visible = false;
+                tsmiTrayImageBeautifier.Visible = false;
+                tsmiImageCombiner.Visible = false;
+                tsmiTrayImageCombiner.Visible = false;
+                tsmiImageSplitter.Visible = false;
+                tsmiTrayImageSplitter.Visible = false;
+                tsmiImageThumbnailer.Visible = false;
+                tsmiTrayImageThumbnailer.Visible = false;
+                tsmiVideoConverter.Visible = false;
+                tsmiTrayVideoConverter.Visible = false;
+                tsmiVideoThumbnailer.Visible = false;
+                tsmiTrayVideoThumbnailer.Visible = false;
+                tsmiHashChecker.Visible = false;
+                tsmiTrayHashChecker.Visible = false;
+                tsmiMetadata.Visible = false;
+                tsmiTrayMetadata.Visible = false;
+                tsmiIndexFolder.Visible = false;
+                tsmiTrayIndexFolder.Visible = false;
+                tsmiClipboardViewer.Visible = false;
+                tsmiTrayClipboardViewer.Visible = false;
+                tsmiBorderlessWindow.Visible = false;
+                tsmiTrayBorderlessWindow.Visible = false;
+                tsmiInspectWindow.Visible = false;
+                tsmiTrayInspectWindow.Visible = false;
+                tsmiMonitorTest.Visible = false;
+                tsmiTrayMonitorTest.Visible = false;
+
+                // Hide debug menu
+                tsddbDebug.Visible = false;
+
+                // Hide tools-related menu separators
+                tssTools1.Visible = false;
+                tssTools2.Visible = false;
+                tssTools3.Visible = false;
+                tssTools4.Visible = false;
+                tssTrayTools1.Visible = false;
+                tssTrayTools2.Visible = false;
+                tssTrayTools3.Visible = false;
+                tssTrayTools4.Visible = false;
+
+                // Hide online copy options
+                tsmiCopyURL.Visible = false;
+                tsmiCopyShortenedURL.Visible = false;
+                tsmiCopyThumbnailURL.Visible = false;
+                tsmiCopyDeletionURL.Visible = false;
+                tsmiCopyHTMLLink.Visible = false;
+                tsmiCopyHTMLImage.Visible = false;
+                tsmiCopyHTMLLinkedImage.Visible = false;
+                tsmiCopyForumLink.Visible = false;
+                tsmiCopyForumImage.Visible = false;
+                tsmiCopyForumLinkedImage.Visible = false;
+                tsmiCopyMarkdownLink.Visible = false;
+                tsmiCopyMarkdownImage.Visible = false;
+                tsmiCopyMarkdownLinkedImage.Visible = false;
+
+                // Hide separators between online copy options and local copy options
+                tssCopy1.Visible = false;
+                tssCopy2.Visible = false;
+                tssCopy3.Visible = false;
+                tssCopy4.Visible = false;
+                tssCopy5.Visible = false;
             }
 
             // TODO: Translate
@@ -756,24 +819,24 @@ namespace ShareX
                         }
                     }
 
-                    tsmiUploadSelectedFile.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsFileExist;
-                    tsmiDownloadSelectedURL.Visible = uim.SelectedItem.IsFileURL;
+                    tsmiUploadSelectedFile.Visible = false;
+                    tsmiDownloadSelectedURL.Visible = false;
                     tsmiEditSelectedFile.Visible = uim.SelectedItem.IsImageFile;
-                    tsmiBeautifyImage.Visible = uim.SelectedItem.IsImageFile;
+                    tsmiBeautifyImage.Visible = false;
                     tsmiAddImageEffects.Visible = uim.SelectedItem.IsImageFile;
                     tsmiPinSelectedFile.Visible = uim.SelectedItem.IsImageFile;
                     UpdateActionsMenu(uim.SelectedItem.Info.FilePath);
                     tsmiDeleteSelectedItem.Visible = true;
                     tsmiDeleteSelectedFile.Visible = uim.SelectedItem.IsFileExist;
-                    tsmiShortenSelectedURL.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsURLExist;
-                    tsmiShareSelectedURL.Visible = !(SystemOptions.DisableUpload || Program.Settings.DisableUpload) && uim.SelectedItem.IsURLExist;
-                    tsmiAnalyzeImage.Visible = uim.SelectedItem.IsImageFile;
-                    tsmiGoogleLens.Visible = uim.SelectedItem.IsURLExist;
-                    tsmiBingVisualSearch.Visible = uim.SelectedItem.IsURLExist;
+                    tsmiShortenSelectedURL.Visible = false;
+                    tsmiShareSelectedURL.Visible = false;
+                    tsmiAnalyzeImage.Visible = false;
+                    tsmiGoogleLens.Visible = false;
+                    tsmiBingVisualSearch.Visible = false;
                     tsmiShowQRCode.Visible = uim.SelectedItem.IsURLExist;
                     tsmiOCRImage.Visible = uim.SelectedItem.IsImageFile;
-                    tsmiCombineImages.Visible = uim.SelectedItems.Count(x => x.IsImageFile) > 1;
-                    tsmiShowResponse.Visible = !string.IsNullOrEmpty(uim.SelectedItem.Info.Result.Response);
+                    tsmiCombineImages.Visible = false;
+                    tsmiShowResponse.Visible = false;
                 }
 
                 if (Program.Settings.TaskViewMode == TaskViewMode.ListView)
@@ -986,9 +1049,7 @@ namespace ShareX
 
         private void ConfigureAutoUpdate()
         {
-            Program.UpdateManager.AllowAutoUpdate = !SystemOptions.DisableUpdateCheck && Program.Settings.AutoCheckUpdate;
-            Program.UpdateManager.UpdateChannel = Program.Settings.UpdateChannel;
-            Program.UpdateManager.ConfigureAutoUpdate();
+            Program.UpdateManager.AllowAutoUpdate = false;
         }
 
         private void AfterTaskSettingsJobs()

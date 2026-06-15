@@ -261,6 +261,7 @@ namespace ShareX
             if (SystemOptions.DisableUpload || Program.Settings.DisableUpload)
             {
                 tcSettings.TabPages.Remove(tpUpload);
+                tcSettings.TabPages.Remove(tpProxy);
             }
 
             tttvMain.MainTabControl = tcSettings;

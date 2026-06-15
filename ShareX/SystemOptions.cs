@@ -1,4 +1,4 @@
-﻿#region License Information (GPL v3)
+#region License Information (GPL v3)
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
@@ -33,8 +33,8 @@ namespace ShareX
     {
         private const string RegistryPath = @"SOFTWARE\ShareX";
 
-        public static bool DisableUpdateCheck { get; private set; }
-        public static bool DisableUpload { get; private set; }
+        public static bool DisableUpdateCheck { get => true; private set { } }
+        public static bool DisableUpload { get => true; private set { } }
         public static bool DisableLogging { get; private set; }
         public static string PersonalPath { get; private set; }
 
