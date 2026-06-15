@@ -12,19 +12,19 @@
 
 ---
 
-## ⚡ What Makes it "Lite"?
+## What Makes it "Lite"?
 
-*   **🔒 100% Offline (No Uploads)**: All file sharing, cloud uploading, URL shortening, and destination settings have been completely stripped from the UI and codebase. You can never accidentally upload a screenshot or file again.
-*   **🚀 Snappy Editor (No Avalonia/SkiaSharp)**: Removed the heavy Modern Image Editor project along with its 30MB+ of dependencies (including SkiaSharp and Avalonia UI). It now defaults entirely to the snappy, instant-loading built-in legacy Windows Forms/GDI annotation editor.
-*   **🌐 English-Only**: Removed over **1,740+** localized translation XML files (`*.*.resx`). This decreases source code size and prevents the compiler from generating dozens of culture-specific subfolders.
-*   **🛠️ Release Optimizations**: Configured globally in `Directory.Build.props` with:
+*   **100% Offline (No Uploads)**: All file sharing, cloud uploading, URL shortening, and destination settings have been completely stripped from the UI and codebase. You can never accidentally upload a screenshot or file again.
+*   **Snappy Editor (No Avalonia/SkiaSharp)**: Removed the heavy Modern Image Editor project along with its 30MB+ of dependencies (including SkiaSharp and Avalonia UI). It now defaults entirely to the snappy, instant-loading built-in legacy Windows Forms/GDI annotation editor.
+*   **English-Only**: Removed over **1,740+** localized translation XML files (`*.*.resx`). This decreases source code size and prevents the compiler from generating dozens of culture-specific subfolders.
+*   **Release Optimizations**: Configured globally in `Directory.Build.props` with:
     *   `<PublishTrimmed>true</PublishTrimmed>`: Enabled partial IL trimming (tree-shaking) with root assembly preservation to safely trim unused base runtime code while keeping Windows Forms/WPF compatibility intact.
     *   `<InvariantGlobalization>true</InvariantGlobalization>`: Strips non-English runtime culture resources.
     *   `<DebugSymbols>false</DebugSymbols>`: Excludes debug symbol files (`.pdb`) from the build output.
 
 ---
 
-## 🎨 Features Retained
+## Features Retained
 
 Even with a massively reduced footprint, all core local capture and utility tools remain fully operational:
 
@@ -37,7 +37,7 @@ Even with a massively reduced footprint, all core local capture and utility tool
 
 ---
 
-## 🛠️ How to Compile
+## How to Compile
 
 You can compile **ShareX-Lite** using either **Visual Studio** or **GitHub Actions**:
 
