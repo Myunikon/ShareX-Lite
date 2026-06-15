@@ -18,7 +18,7 @@
 *   **🚀 Snappy Editor (No Avalonia/SkiaSharp)**: Removed the heavy Modern Image Editor project along with its 30MB+ of dependencies (including SkiaSharp and Avalonia UI). It now defaults entirely to the snappy, instant-loading built-in legacy Windows Forms/GDI annotation editor.
 *   **🌐 English-Only**: Removed over **1,740+** localized translation XML files (`*.*.resx`). This decreases source code size and prevents the compiler from generating dozens of culture-specific subfolders.
 *   **🛠️ Release Optimizations**: Configured globally in `Directory.build.props` with:
-    *   `<PublishTrimmed>true</PublishTrimmed>`: Intermediate Language (IL) trimming (tree-shaking) to strip unused library code.
+    *   `<PublishTrimmed>false</PublishTrimmed>`: Trimming is disabled to ensure Windows Forms compatibility, while release compilation optimizations are fully enabled.
     *   `<InvariantGlobalization>true</InvariantGlobalization>`: Strips non-English runtime culture resources.
     *   `<DebugSymbols>false</DebugSymbols>`: Excludes debug symbol files (`.pdb`) from the build output.
 
@@ -30,9 +30,9 @@ Even with a massively reduced footprint, all core local capture and utility tool
 
 *   **Capture**: Region capture, screen capture, active window capture, scrolling screenshot.
 *   **Record**: Screen recording (FFmpeg-based MP4 and GIF).
-*   **Annotate**: Legacy image annotation editor (shapes, arrows, text, step tool, blur, pixelate, crop, magnifier).
+*   **Annotate**: Snappy, built-in drawing editor (shapes, arrows, text, step tool, blur, pixelate, crop, magnifier).
 *   **OCR**: Snappy local text extraction (using Windows OCR API).
-*   **Tools**: Color picker, screen ruler, image combiner, video converter, pin-to-screen.
+*   **Tools**: Color picker, screen color picker, screen ruler, pin-to-screen, QR code creator/reader.
 *   **Automation**: Auto-save to local folder and copy to clipboard.
 
 ---
